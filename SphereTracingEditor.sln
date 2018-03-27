@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SphereTracingEditor", "SphereTracingEditor\SphereTracingEditor.pyproj", "{57ADA280-1E5C-4AE2-8C0D-7E07EEB0C0FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57ADA280-1E5C-4AE2-8C0D-7E07EEB0C0FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57ADA280-1E5C-4AE2-8C0D-7E07EEB0C0FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4639230-9035-4C43-9258-1FA4768A0C16}
+	EndGlobalSection
+EndGlobal
