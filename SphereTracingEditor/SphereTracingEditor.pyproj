@@ -21,6 +21,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controller.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CustomMath.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GraphNodes.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SphereTracingEditor.py" />
     <Compile Include="View.py">
       <SubType>Code</SubType>

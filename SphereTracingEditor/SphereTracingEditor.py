@@ -1,3 +1,5 @@
-import View
+import Controller
 
-Window = View.View(1024,720, 'Sphere Tracing Editor')
+Editor = Controller.Controller()
+
+
