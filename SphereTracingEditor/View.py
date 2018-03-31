@@ -91,6 +91,18 @@ class View:
     def NodeLeftMouseReleased(self, node):
         self.Controller.NodeLeftMouseReleased(node)
 
+    def NodeInputLeftMousePressed(self, node):
+        self.Controller.NodeInputLeftMousePressed(node)
+
+    def NodeInputLeftMouseReleased(self, node):
+        self.Controller.NodeInputLeftMouseReleased(node)
+
+    def NodeOutputLeftMousePressed(self, node):
+        self.Controller.NodeOutputLeftMousePressed(node)
+
+    def NodeOutputLeftMouseReleased(self, node):
+        self.Controller.NodeOutputLeftMouseReleased(node)
+
     def GraphLeftMousePressed(self,event):
         print('GraphLeftMousePressed')
 

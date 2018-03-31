@@ -28,6 +28,17 @@ class Controller:
         self.SelectedNodes = []
         self.MovingNodes = False
 
+    def NodeInputLeftMousePressed(self, node):
+        print('NodeInputLeftMousePressed')
+
+    def NodeInputLeftMouseReleased(self, node):
+        print('NodeInputLeftMouseReleased')
+
+    def NodeOutputLeftMousePressed(self, node):
+        print('NodeOutputLeftMousePressed')
+
+    def NodeOutputLeftMouseReleased(self, node):
+        print('NodeOutputLeftMouseReleased')
 
     def SelectNode(self, node):
         try:
