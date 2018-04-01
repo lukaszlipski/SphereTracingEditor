@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GraphConnections.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controller.py">
       <SubType>Code</SubType>
     </Compile>

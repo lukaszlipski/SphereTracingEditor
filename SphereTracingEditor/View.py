@@ -2,6 +2,7 @@ import tkinter as tk
 import GraphNodes
 import Controller
 from CustomMath import Vec2
+import GraphConnections
 
 class View:
     def __init__(self, controller, width, height, title):
@@ -43,7 +44,7 @@ class View:
         self.Settings.pack_propagate(0)
 
         # Graph
-        self.Graph = tk.Frame(self.Editor, bg='#7c4dff')
+        self.Graph = tk.Canvas(self.Editor, bg='#7c4dff')
         self.Graph.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
         # Settings menu
