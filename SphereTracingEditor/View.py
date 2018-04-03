@@ -83,6 +83,12 @@ class View:
         return Vec2(x,y)
 
 
+    def GetWidgetUnderCursor(self):
+        GlobalMousePos = Vec2(self.Graph.winfo_pointerx(), self.Graph.winfo_pointery())
+        WidgetUnderCursor = self.Graph.winfo_containing(GlobalMousePos.X,GlobalMousePos.Y)
+        return WidgetUnderCursor
+
+
     def CreateNode(self, x=0, y=0):
         self.Nodes.append(GraphNodes.GraphNode(self, x, y))
 
@@ -130,5 +136,10 @@ class View:
 
     def CustomLoop(self):
         # Code here
+
+        #Widget = self.GetWidgetUnderCursor()
+        #if(Widget != None):
+        #    print(Widget)
+
         self.Controller.Update()
         self.MainWindow.after(16, self.CustomLoop)

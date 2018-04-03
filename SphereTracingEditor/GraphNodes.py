@@ -1,7 +1,8 @@
 from CustomMath import Vec2
+import GraphPins
 import tkinter as tk
 
-class GraphNode:
+class GraphNode(tk.Frame):
 
     def __init__(self, view, x=0, y=0):
 
@@ -15,6 +16,11 @@ class GraphNode:
 
         self.CanHaveInputs = True;
         self.CanHaveOuputs = True;
+
+        self.InputsNum = 1
+        self.OutputsNum = 4
+
+        self.PinOffset = 15
 
         Width = self.ImageSize
         Height = self.LabelExtend + self.ImageSize
@@ -51,8 +57,10 @@ class GraphNode:
             self.Inputs = tk.Frame(self.Node, bg='pink')
             self.Inputs.pack(side=tk.LEFT, fill=tk.Y, expand=False)
             self.Inputs.configure(width=self.SideExtend)
-            self.Inputs.bind('<ButtonPress-1>', lambda event: self.Owner.NodeInputLeftMousePressed(self))
-            self.Inputs.bind('<ButtonRelease-1>', lambda event: self.Owner.NodeInputLeftMouseReleased(self))
+
+            for i in range(0,self.InputsNum):
+                CurrentHeight = self.ImageSize/2 - (self.InputsNum/2 * self.PinOffset) + (i * self.PinOffset) + GraphPins.GraphPin.Size.Y/2
+                GraphPins.GraphPin(self, self.Inputs, Vec2(0,CurrentHeight))
 
         # Image
         self.Image = tk.Frame(self.Node, bg='red')
@@ -64,11 +72,20 @@ class GraphNode:
             self.Outputs = tk.Frame(self.Node, bg='pink')
             self.Outputs.pack(side=tk.RIGHT, fill=tk.Y, expand=False)
             self.Outputs.configure(width=self.SideExtend)
-            self.Outputs.bind('<ButtonPress-1>', lambda event: self.Owner.NodeOutputLeftMousePressed(self))
-            self.Outputs.bind('<ButtonRelease-1>', lambda event: self.Owner.NodeOutputLeftMouseReleased(self))
 
+            for i in range(0,self.OutputsNum):
+                CurrentHeight = self.ImageSize/2 - (self.OutputsNum/2 * self.PinOffset) + (i * self.PinOffset) + GraphPins.GraphPin.Size.Y/2
+                GraphPins.GraphPin(self, self.Outputs, Vec2(0,CurrentHeight))
+
+            
 
 
     def ChangePos(self, offset):
         self.Pos.Sub(offset)
         self.MainWidget.place_configure(x=self.Pos.X, y=self.Pos.Y)
+
+    def NodePinLeftMousePressed(self, pin):
+        print('NodePinLeftMousePressed')
+
+    def NodePinLeftMouseReleased(self, pin):
+        print('NodePinLeftMouseReleased')
