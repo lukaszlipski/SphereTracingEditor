@@ -13,6 +13,7 @@ class View:
         self.MainWindow.title(title);
         
         self.Nodes = []
+        self.Connections = []
 
         self.InitWidgets()
         self.InitEvents()
@@ -24,6 +25,7 @@ class View:
 
 
     def InitWidgets(self):
+
         # Menu bar
         MenuBarHeight = 50
 
@@ -88,6 +90,16 @@ class View:
         WidgetUnderCursor = self.Graph.winfo_containing(GlobalMousePos.X,GlobalMousePos.Y)
         return WidgetUnderCursor
 
+    def GetNodeUnderCursor(self):
+        Widget = self.GetWidgetUnderCursor()
+        if Widget != None:
+            while Widget.master != None and not(hasattr(Widget, 'Owner')):
+                Widget = Widget.master
+        
+        if hasattr(Widget, 'Owner'):
+            return Widget.Owner
+        else:
+            return None
 
     def CreateNode(self, x=0, y=0):
         self.Nodes.append(GraphNodes.GraphNode(self, x, y))
@@ -109,6 +121,12 @@ class View:
 
     def NodeOutputLeftMouseReleased(self, node):
         self.Controller.NodeOutputLeftMouseReleased(node)
+
+    def NodePinLeftMousePressed(self, node, pin):
+        self.Controller.NodePinLeftMousePressed(node, pin)
+
+    def NodePinLeftMouseReleased(self, node, pin):
+        self.Controller.NodePinLeftMouseReleased(node, pin)
 
     def GraphLeftMousePressed(self,event):
         print('GraphLeftMousePressed')
@@ -135,11 +153,11 @@ class View:
         print('GlobalSettingsBtnClicked')
 
     def CustomLoop(self):
-        # Code here
+        
 
-        #Widget = self.GetWidgetUnderCursor()
-        #if(Widget != None):
-        #    print(Widget)
+        for connection in self.Connections:
+            connection.Clear()
+            connection.Draw()
 
         self.Controller.Update()
         self.MainWindow.after(16, self.CustomLoop)

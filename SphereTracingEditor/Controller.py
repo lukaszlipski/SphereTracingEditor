@@ -1,5 +1,7 @@
 import View
 from CustomMath import Vec2
+import GraphConnections
+import GraphPins
 
 class Controller:
 
@@ -8,6 +10,7 @@ class Controller:
         self.MovingNodes = False
         self.SelectedNodes = []
         self.LastMousePos = Vec2(0,0)
+        self.Connection = None
 
         self.Window.Run()
 
@@ -40,6 +43,48 @@ class Controller:
     def NodeOutputLeftMouseReleased(self, node):
         print('NodeOutputLeftMouseReleased')
 
+    def NodePinLeftMousePressed(self, node, pin):
+        # Clear connection
+        self.ClearConnection(pin.Connection)
+        
+        # Create connection
+        self.Connection = GraphConnections.BezierConnection(self.Window.Graph, pin, self.Window.GetMousePos())
+
+
+    def NodePinLeftMouseReleased(self, node, pin):
+        Widget = self.Window.GetNodeUnderCursor()
+        if Widget == None or Widget == pin:
+            self.Connection.Clear()
+            self.Connection = None
+            return 
+
+        # Release at another pin
+        if isinstance(Widget, GraphPins.GraphPin):
+            self.ClearConnection(Widget.Connection)
+            self.Connection.SetEnd(Widget)
+            pin.SetConnection(self.Connection)
+            Widget.SetConnection(self.Connection)
+            self.Window.Connections.append(self.Connection)
+        else:
+            self.Connection.Clear()
+
+        self.Connection = None
+
+
+    def ClearConnection(self, connection):
+        try:
+            if connection:
+                connection.Clear()
+            self.Window.Connections.remove(connection)
+            StartPin = connection.Start
+            EndPin = connection.End
+            StartPin = None
+            EndPin = None
+            connection = None
+        except ValueError:
+            pass
+
+
     def SelectNode(self, node):
         try:
             self.SelectedNodes.index(node)
@@ -52,6 +97,11 @@ class Controller:
         CurrentMousePos = self.Window.GetMousePos()
         MousePosDelta = self.LastMousePos.Sub(CurrentMousePos)
         self.LastMousePos = CurrentMousePos
+
+        if self.Connection:
+            self.Connection.SetEnd(CurrentMousePos)
+            self.Connection.Clear()
+            self.Connection.Draw()
 
         if self.MovingNodes:
             for node in self.SelectedNodes:

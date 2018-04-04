@@ -1,6 +1,7 @@
 from CustomMath import Vec2
 import tkinter as tk
 import math
+import GraphPins
 
 class BezierConnection:
     def __init__(self, canvas, start=Vec2(), end=Vec2()):
@@ -32,19 +33,33 @@ class BezierConnection:
 
         return p1 * k1 + p2 * k2 + p3 * k3 + p4 * k4 
 
+
     def Draw(self):
         
-        MiddlePoint = (self.Start + self.End) * 0.5
+        StartPos = 0
+        EndPos = 0
 
-        Offset1 = Vec2(0,1) * ((MiddlePoint - self.Start).Dot(Vec2(0,1)))
-        Offset2 = Vec2(0,1) * ((MiddlePoint - self.End).Dot(Vec2(0,1)))
+        if isinstance(self.Start, Vec2):
+            StartPos = self.Start
+        elif isinstance(self.Start, GraphPins.GraphPin):
+            StartPos = self.Start.GetPos(self.Canvas)
+
+        if isinstance(self.End, Vec2):
+            EndPos = self.End
+        elif isinstance(self.End, GraphPins.GraphPin):
+            EndPos = self.End.GetPos(self.Canvas)
+
+        MiddlePoint = (StartPos + EndPos) * 0.5
+
+        Offset1 = Vec2(0,1) * ((MiddlePoint - StartPos).Dot(Vec2(0,1)))
+        Offset2 = Vec2(0,1) * ((MiddlePoint - EndPos).Dot(Vec2(0,1)))
 
         Point1 = MiddlePoint - Offset1
         Point2 = MiddlePoint - Offset2
         
-        for t in range(1, self.SamplesNum):
-            pointA = self.BezierCurve(self.Start, Point1, Point2, self.End, (t-1)/self.SamplesNum)
-            pointB = self.BezierCurve(self.Start, Point1, Point2, self.End, t/self.SamplesNum)
+        for t in range(1, self.SamplesNum+1):
+            pointA = self.BezierCurve(StartPos, Point1, Point2, EndPos, (t-1)/self.SamplesNum)
+            pointB = self.BezierCurve(StartPos, Point1, Point2, EndPos, t/self.SamplesNum)
             self.Canvas.create_line(pointA.X,pointA.Y,pointB.X,pointB.Y, width = self.LineWidth, tag = 'Connection' + str(id(self)) )
             
 

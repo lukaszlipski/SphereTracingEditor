@@ -2,7 +2,7 @@ from CustomMath import Vec2
 import GraphPins
 import tkinter as tk
 
-class GraphNode(tk.Frame):
+class GraphNode:
 
     def __init__(self, view, x=0, y=0):
 
@@ -37,10 +37,14 @@ class GraphNode(tk.Frame):
         
 
     def InitWidgets(self):
+
         self.MainWidget = tk.Frame(self.Owner.Graph, bg='red')
         self.MainWidget.place_configure(x=self.Pos.X,y=self.Pos.Y)
         self.MainWidget.configure(width=self.Size.X,height=self.Size.Y)
         self.MainWidget.pack_propagate(0)
+
+        # Set owner
+        self.MainWidget.Owner = self
 
         # Label with name
         self.NameLabel = tk.Label(self.MainWidget, text=self.Name)
@@ -60,7 +64,7 @@ class GraphNode(tk.Frame):
 
             for i in range(0,self.InputsNum):
                 CurrentHeight = self.ImageSize/2 - (self.InputsNum/2 * self.PinOffset) + (i * self.PinOffset) + GraphPins.GraphPin.Size.Y/2
-                GraphPins.GraphPin(self, self.Inputs, Vec2(0,CurrentHeight))
+                GraphPins.GraphPin(self, i, self.Inputs, Vec2(0,CurrentHeight))
 
         # Image
         self.Image = tk.Frame(self.Node, bg='red')
@@ -75,17 +79,16 @@ class GraphNode(tk.Frame):
 
             for i in range(0,self.OutputsNum):
                 CurrentHeight = self.ImageSize/2 - (self.OutputsNum/2 * self.PinOffset) + (i * self.PinOffset) + GraphPins.GraphPin.Size.Y/2
-                GraphPins.GraphPin(self, self.Outputs, Vec2(0,CurrentHeight))
+                GraphPins.GraphPin(self, i, self.Outputs, Vec2(0,CurrentHeight))
 
             
-
 
     def ChangePos(self, offset):
         self.Pos.Sub(offset)
         self.MainWidget.place_configure(x=self.Pos.X, y=self.Pos.Y)
 
     def NodePinLeftMousePressed(self, pin):
-        print('NodePinLeftMousePressed')
+        self.Owner.NodePinLeftMousePressed(self, pin)
 
     def NodePinLeftMouseReleased(self, pin):
-        print('NodePinLeftMouseReleased')
+        self.Owner.NodePinLeftMouseReleased(self, pin)
