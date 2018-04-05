@@ -14,10 +14,13 @@ class GraphNode:
         self.Owner = view
         self.Name = 'Not specified'
 
+        self.InputPins = []
+        self.OutputPins = []
+
         self.CanHaveInputs = True;
         self.CanHaveOuputs = True;
 
-        self.InputsNum = 1
+        self.InputsNum = 2
         self.OutputsNum = 4
 
         self.PinOffset = 15
@@ -58,13 +61,13 @@ class GraphNode:
 
         # Inputs
         if self.CanHaveInputs:
-            self.Inputs = tk.Frame(self.Node, bg='pink')
-            self.Inputs.pack(side=tk.LEFT, fill=tk.Y, expand=False)
-            self.Inputs.configure(width=self.SideExtend)
+            self.InputsWidget = tk.Frame(self.Node, bg='pink')
+            self.InputsWidget.pack(side=tk.LEFT, fill=tk.Y, expand=False)
+            self.InputsWidget.configure(width=self.SideExtend)
 
             for i in range(0,self.InputsNum):
                 CurrentHeight = self.ImageSize/2 - (self.InputsNum/2 * self.PinOffset) + (i * self.PinOffset) + GraphPins.GraphPin.Size.Y/2
-                GraphPins.GraphPin(self, i, self.Inputs, Vec2(0,CurrentHeight))
+                self.InputPins.append(GraphPins.GraphInputPin(self, i, self.InputsWidget, Vec2(0,CurrentHeight)))
 
         # Image
         self.Image = tk.Frame(self.Node, bg='red')
@@ -73,13 +76,13 @@ class GraphNode:
 
         # Outputs
         if self.CanHaveOuputs:
-            self.Outputs = tk.Frame(self.Node, bg='pink')
-            self.Outputs.pack(side=tk.RIGHT, fill=tk.Y, expand=False)
-            self.Outputs.configure(width=self.SideExtend)
+            self.OutputsWidget = tk.Frame(self.Node, bg='pink')
+            self.OutputsWidget.pack(side=tk.RIGHT, fill=tk.Y, expand=False)
+            self.OutputsWidget.configure(width=self.SideExtend)
 
             for i in range(0,self.OutputsNum):
                 CurrentHeight = self.ImageSize/2 - (self.OutputsNum/2 * self.PinOffset) + (i * self.PinOffset) + GraphPins.GraphPin.Size.Y/2
-                GraphPins.GraphPin(self, i, self.Outputs, Vec2(0,CurrentHeight))
+                self.OutputPins.append(GraphPins.GraphOutputPin(self, i, self.OutputsWidget, Vec2(0,CurrentHeight)))
 
             
 
@@ -92,3 +95,14 @@ class GraphNode:
 
     def NodePinLeftMouseReleased(self, pin):
         self.Owner.NodePinLeftMouseReleased(self, pin)
+
+    def Delete(self):
+        for input in self.InputPins:
+            input.RemoveAllConnections()
+
+        for output in self.OutputPins:
+            output.RemoveAllConnections()
+
+        self.MainWidget.destroy()
+
+

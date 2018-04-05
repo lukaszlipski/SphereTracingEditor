@@ -1,5 +1,6 @@
 import tkinter as tk
 import GraphNodes
+import GraphPins
 import Controller
 from CustomMath import Vec2
 import GraphConnections
@@ -13,7 +14,6 @@ class View:
         self.MainWindow.title(title);
         
         self.Nodes = []
-        self.Connections = []
 
         self.InitWidgets()
         self.InitEvents()
@@ -77,6 +77,7 @@ class View:
         self.Graph.bind('<ButtonRelease-2>', self.GraphScrollReleased)
         self.Graph.bind('<ButtonPress-3>', self.GraphRightMousePressed)
         self.Graph.bind('<ButtonRelease-3>', self.GraphRightMouseReleased)
+        self.MainWindow.bind('<Delete>', self.DeleteBtnPressed)
 
 
     def GetMousePos(self):
@@ -97,12 +98,16 @@ class View:
                 Widget = Widget.master
         
         if hasattr(Widget, 'Owner'):
-            return Widget.Owner
-        else:
-            return None
+            if issubclass( type(Widget.Owner), GraphPins.GraphPin):
+                return Widget.Owner
+        
+        return None
 
     def CreateNode(self, x=0, y=0):
         self.Nodes.append(GraphNodes.GraphNode(self, x, y))
+
+    def DeleteBtnPressed(self, event):
+        self.Controller.DeleteBtnPressed()
 
     def NodeLeftMousePressed(self, node):
         self.Controller.NodeLeftMousePressed(node)
@@ -129,7 +134,7 @@ class View:
         self.Controller.NodePinLeftMouseReleased(node, pin)
 
     def GraphLeftMousePressed(self,event):
-        print('GraphLeftMousePressed')
+        self.Controller.GraphLeftMousePressed()
 
     def GraphLeftMouseReleased(self,event):
         print('GraphLeftMouseReleased')
@@ -141,7 +146,7 @@ class View:
         print('GraphScrollReleased')
 
     def GraphRightMousePressed(self,event):
-        self.Controller.GraphLeftMousePressed()
+        self.Controller.GraphRightMousePressed()
 
     def GraphRightMouseReleased(self,event):
         print('GraphRightMouseReleased')
@@ -154,10 +159,16 @@ class View:
 
     def CustomLoop(self):
         
-
-        for connection in self.Connections:
-            connection.Clear()
-            connection.Draw()
+        for node in self.Nodes:
+            if node.CanHaveOuputs:
+                for i in node.OutputPins:
+                    i.ClearConnection()
+                    i.DrawConnection()
+                continue
+            if node.CanHaveInputs:
+                for i in node.InputPins:
+                    i.ClearConnection()
+                    i.DrawConnection()
 
         self.Controller.Update()
         self.MainWindow.after(16, self.CustomLoop)

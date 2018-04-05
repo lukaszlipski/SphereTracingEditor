@@ -10,15 +10,14 @@ class Controller:
         self.MovingNodes = False
         self.SelectedNodes = []
         self.LastMousePos = Vec2(0,0)
-        self.Connection = None
+        self.NewConnection = None
 
         self.Window.Run()
 
 
-    def GraphLeftMousePressed(self):
+    def GraphRightMousePressed(self):
         CurrentMousePos = self.Window.GetMousePos()
         self.Window.CreateNode(CurrentMousePos.X, CurrentMousePos.Y)
-
 
     def NodeLeftMousePressed(self, node):
         self.SelectedNodes = []
@@ -26,9 +25,10 @@ class Controller:
         self.MovingNodes = True
         self.LastMousePos = self.Window.GetMousePos()
       
-        
-    def NodeLeftMouseReleased(self, node):
+    def GraphLeftMousePressed(self):
         self.SelectedNodes = []
+
+    def NodeLeftMouseReleased(self, node):
         self.MovingNodes = False
 
     def NodeInputLeftMousePressed(self, node):
@@ -44,45 +44,47 @@ class Controller:
         print('NodeOutputLeftMouseReleased')
 
     def NodePinLeftMousePressed(self, node, pin):
-        # Clear connection
-        self.ClearConnection(pin.Connection)
-        
         # Create connection
-        self.Connection = GraphConnections.BezierConnection(self.Window.Graph, pin, self.Window.GetMousePos())
+        self.NewConnection = GraphConnections.BezierConnection(self.Window.Graph, pin, self.Window.GetMousePos())
+        pin.SetConnection(self.NewConnection)
+        self.NewConnection.SetStart(pin)
+      
+    def DeleteBtnPressed(self):
+        for node in self.SelectedNodes:
+            node.Delete()
+            self.SelectedNodes.remove(node)
 
+    def NodePinLeftMouseReleased(self, node, oldPin):
 
-    def NodePinLeftMouseReleased(self, node, pin):
-        Widget = self.Window.GetNodeUnderCursor()
-        if Widget == None or Widget == pin:
-            self.Connection.Clear()
-            self.Connection = None
-            return 
+        NewPin = self.Window.GetNodeUnderCursor()
 
-        # Release at another pin
-        if isinstance(Widget, GraphPins.GraphPin):
-            self.ClearConnection(Widget.Connection)
-            self.Connection.SetEnd(Widget)
-            pin.SetConnection(self.Connection)
-            Widget.SetConnection(self.Connection)
-            self.Window.Connections.append(self.Connection)
-        else:
-            self.Connection.Clear()
+        # No pin under cursor
+        if NewPin == None:
+            self.NewConnection.Remove()
+            self.NewConnection.Clear()
+            self.NewConnection = None
+            return
 
-        self.Connection = None
+        # End pin same as start pin
+        if NewPin == oldPin:
+            oldPin.RemoveAllConnections()
+            self.NewConnection.Remove()
+            self.NewConnection.Clear()
+            self.NewConnection = None
+            return
 
+        # Release at different pin
+        if isinstance(NewPin, GraphPins.GraphPin):
+            
+            if oldPin.IsAlreadyConnection(NewPin):
+                self.NewConnection.Remove()
+            else:
+                NewPin.SetConnection(self.NewConnection)
+                self.NewConnection.SetEnd(NewPin)
 
-    def ClearConnection(self, connection):
-        try:
-            if connection:
-                connection.Clear()
-            self.Window.Connections.remove(connection)
-            StartPin = connection.Start
-            EndPin = connection.End
-            StartPin = None
-            EndPin = None
-            connection = None
-        except ValueError:
-            pass
+            self.NewConnection.Clear()
+            self.NewConnection = None
+        
 
 
     def SelectNode(self, node):
@@ -98,10 +100,10 @@ class Controller:
         MousePosDelta = self.LastMousePos.Sub(CurrentMousePos)
         self.LastMousePos = CurrentMousePos
 
-        if self.Connection:
-            self.Connection.SetEnd(CurrentMousePos)
-            self.Connection.Clear()
-            self.Connection.Draw()
+        if self.NewConnection:
+            self.NewConnection.SetEnd(CurrentMousePos)
+            self.NewConnection.Clear()
+            self.NewConnection.Draw()
 
         if self.MovingNodes:
             for node in self.SelectedNodes:

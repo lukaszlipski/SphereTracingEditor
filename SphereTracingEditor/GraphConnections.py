@@ -24,6 +24,7 @@ class BezierConnection:
 
     def SetEnd(self, end):
         self.End = end
+
   
     def BezierCurve(self,p1,p2,p3,p4,t):
         k1 = math.pow((1-t),3)
@@ -43,14 +44,18 @@ class BezierConnection:
             StartPos = self.Start
         elif isinstance(self.Start, GraphPins.GraphPin):
             StartPos = self.Start.GetPos(self.Canvas)
+        else:
+            return
 
         if isinstance(self.End, Vec2):
             EndPos = self.End
         elif isinstance(self.End, GraphPins.GraphPin):
             EndPos = self.End.GetPos(self.Canvas)
+        else:
+            return
 
         MiddlePoint = (StartPos + EndPos) * 0.5
-
+        
         Offset1 = Vec2(0,1) * ((MiddlePoint - StartPos).Dot(Vec2(0,1)))
         Offset2 = Vec2(0,1) * ((MiddlePoint - EndPos).Dot(Vec2(0,1)))
 
@@ -65,3 +70,20 @@ class BezierConnection:
 
     def Clear(self):
         self.Canvas.delete( 'Connection' + str(id(self)) )
+
+
+    def Remove(self):
+        if isinstance(self.Start, GraphPins.GraphPin):
+            self.Start.RemoveConnection(self)
+        if isinstance(self.End, GraphPins.GraphPin):
+            self.End.RemoveConnection(self)
+        self.Clear()
+
+    def CheckConnection(self, nodeA, nodeB):
+        Result = False
+        if nodeA == self.Start and nodeB == self.End:
+            Result = True
+        if nodeB == self.Start and nodeA == self.End:
+            Result = True
+        return Result
+
