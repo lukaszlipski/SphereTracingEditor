@@ -140,10 +140,10 @@ class View:
         print('GraphLeftMouseReleased')
 
     def GraphScrollPressed(self,event):
-        print('GraphScrollPressed')
+        self.Controller.GraphScrollPressed()
 
     def GraphScrollReleased(self,event):
-        print('GraphScrollReleased')
+        self.Controller.GraphScrollReleased()
 
     def GraphRightMousePressed(self,event):
         self.Controller.GraphRightMousePressed()

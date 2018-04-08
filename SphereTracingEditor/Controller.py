@@ -8,6 +8,7 @@ class Controller:
     def __init__(self):
         self.Window = View.View(self, 1024,720, 'Sphere Tracing Editor')
         self.MovingNodes = False
+        self.MovingCanvas = False
         self.SelectedNodes = []
         self.LastMousePos = Vec2(0,0)
         self.NewConnection = None
@@ -42,6 +43,12 @@ class Controller:
 
     def NodeOutputLeftMouseReleased(self, node):
         print('NodeOutputLeftMouseReleased')
+
+    def GraphScrollPressed(self):
+        self.MovingCanvas = True
+
+    def GraphScrollReleased(self):
+        self.MovingCanvas = False
 
     def NodePinLeftMousePressed(self, node, pin):
         # Create connection
@@ -107,4 +114,8 @@ class Controller:
 
         if self.MovingNodes:
             for node in self.SelectedNodes:
+                node.ChangePos(MousePosDelta)
+
+        if self.MovingCanvas:
+            for node in self.Window.Nodes:
                 node.ChangePos(MousePosDelta)
