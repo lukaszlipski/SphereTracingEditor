@@ -60,6 +60,7 @@ class Controller:
         for node in self.SelectedNodes:
             node.Delete()
             self.SelectedNodes.remove(node)
+            self.Window.Nodes.remove(node)
 
     def NodePinLeftMouseReleased(self, node, oldPin):
 
