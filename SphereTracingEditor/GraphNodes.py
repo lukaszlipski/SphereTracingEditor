@@ -12,16 +12,9 @@ class GraphNode:
 
         self.Pos = Vec2(x,y)
         self.Owner = view
-        self.Name = 'Not specified'
 
         self.InputPins = []
         self.OutputPins = []
-
-        self.CanHaveInputs = True;
-        self.CanHaveOuputs = True;
-
-        self.InputsNum = 2
-        self.OutputsNum = 4
 
         self.PinOffset = 15
 
@@ -105,4 +98,66 @@ class GraphNode:
 
         self.MainWidget.destroy()
 
+    @staticmethod
+    def GetChildren():
+        return GraphNode.__subclasses__()
 
+
+class Sphere(GraphNode):
+    def __init__(self, view, x = 0, y = 0):
+
+        self.Name = 'Sphere'
+        self.InputsNum = 2
+        self.OutputsNum = 1
+        self.CanHaveInputs = False;
+        self.CanHaveOuputs = True;
+
+        super().__init__(view, x, y)
+ 
+        
+class Box(GraphNode):
+    def __init__(self, view, x = 0, y = 0):
+
+        self.Name = 'Box'
+        self.InputsNum = 2
+        self.OutputsNum = 1
+        self.CanHaveInputs = False;
+        self.CanHaveOuputs = True;
+
+        super().__init__(view, x, y)
+
+
+class Intersect(GraphNode):
+    def __init__(self, view, x = 0, y = 0):
+
+        self.Name = 'And'
+        self.InputsNum = 2
+        self.OutputsNum = 1
+        self.CanHaveInputs = True;
+        self.CanHaveOuputs = True;
+
+        super().__init__(view, x, y)
+
+
+class Union(GraphNode):
+    def __init__(self, view, x = 0, y = 0):
+
+        self.Name = 'Union'
+        self.InputsNum = 2
+        self.OutputsNum = 1
+        self.CanHaveInputs = True;
+        self.CanHaveOuputs = True;
+
+        super().__init__(view, x, y)
+
+
+class Subtract(GraphNode):
+    def __init__(self, view, x = 0, y = 0):
+
+        self.Name = 'Subtract'
+        self.InputsNum = 2
+        self.OutputsNum = 1
+        self.CanHaveInputs = True;
+        self.CanHaveOuputs = True;
+
+        super().__init__(view, x, y)

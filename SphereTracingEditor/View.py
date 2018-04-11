@@ -4,6 +4,7 @@ import GraphPins
 import Controller
 from CustomMath import Vec2
 import GraphConnections
+import GraphNodesMenu
 
 class View:
     def __init__(self, controller, width, height, title):
@@ -14,6 +15,7 @@ class View:
         self.MainWindow.title(title);
         
         self.Nodes = []
+        self.NodesMenu = None
 
         self.InitWidgets()
         self.InitEvents()
@@ -79,6 +81,14 @@ class View:
         self.Graph.bind('<ButtonRelease-3>', self.GraphRightMouseReleased)
         self.MainWindow.bind('<Delete>', self.DeleteBtnPressed)
 
+    def CreateNodesMenu(self, Pos):
+        self.NodesMenu = GraphNodesMenu.GraphNodesMenu(self, Pos)
+
+    def DeleteNodesMenu(self):
+        if self.NodesMenu:
+            self.NodesMenu.Delete()
+            del self.NodesMenu
+            self.NodesMenu = None
 
     def GetMousePos(self):
         x = self.Graph.winfo_pointerx() - self.Graph.winfo_rootx()
@@ -103,8 +113,8 @@ class View:
         
         return None
 
-    def CreateNode(self, x=0, y=0):
-        self.Nodes.append(GraphNodes.GraphNode(self, x, y))
+    def CreateNode(self, name, x=0, y=0):
+        self.Nodes.append( eval(('GraphNodes.' + name))(self, x, y) )
 
     def DeleteBtnPressed(self, event):
         self.Controller.DeleteBtnPressed()
@@ -156,6 +166,9 @@ class View:
 
     def GlobalSettingsBtnClicked(self,event):
         print('GlobalSettingsBtnClicked')
+
+    def NodesMenuSelected(self, selection):
+        self.Controller.NodesMenuSelected(selection)
 
     def CustomLoop(self):
         

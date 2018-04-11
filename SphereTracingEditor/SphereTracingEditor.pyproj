@@ -33,6 +33,9 @@
     <Compile Include="GraphNodes.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GraphNodesMenu.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GraphPins.py">
       <SubType>Code</SubType>
     </Compile>

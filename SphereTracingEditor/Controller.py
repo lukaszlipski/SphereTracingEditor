@@ -2,6 +2,7 @@ import View
 from CustomMath import Vec2
 import GraphConnections
 import GraphPins
+import GraphNodes
 
 class Controller:
 
@@ -18,15 +19,19 @@ class Controller:
 
     def GraphRightMousePressed(self):
         CurrentMousePos = self.Window.GetMousePos()
-        self.Window.CreateNode(CurrentMousePos.X, CurrentMousePos.Y)
+        #self.Window.CreateNode(CurrentMousePos.X, CurrentMousePos.Y)
+        self.Window.DeleteNodesMenu()
+        self.Window.CreateNodesMenu(CurrentMousePos)
 
     def NodeLeftMousePressed(self, node):
+        self.Window.DeleteNodesMenu()
         self.SelectedNodes = []
         self.SelectNode(node)
         self.MovingNodes = True
         self.LastMousePos = self.Window.GetMousePos()
       
     def GraphLeftMousePressed(self):
+        self.Window.DeleteNodesMenu()
         self.SelectedNodes = []
 
     def NodeLeftMouseReleased(self, node):
@@ -45,6 +50,7 @@ class Controller:
         print('NodeOutputLeftMouseReleased')
 
     def GraphScrollPressed(self):
+        self.Window.DeleteNodesMenu()
         self.MovingCanvas = True
 
     def GraphScrollReleased(self):
@@ -93,6 +99,11 @@ class Controller:
             self.NewConnection.Clear()
             self.NewConnection = None
         
+
+    def NodesMenuSelected(self, selection):
+        self.Window.DeleteNodesMenu()
+        CurrentMousePos = self.Window.GetMousePos()
+        self.Window.CreateNode(selection, CurrentMousePos.X, CurrentMousePos.Y)
 
 
     def SelectNode(self, node):
