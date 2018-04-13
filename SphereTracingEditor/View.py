@@ -15,6 +15,7 @@ class View:
         self.MainWindow.title(title);
         
         self.Nodes = []
+        self.VisibleNodes = []
         self.NodesMenu = None
 
         self.InitWidgets()
@@ -170,6 +171,12 @@ class View:
     def NodesMenuSelected(self, selection):
         self.Controller.NodesMenuSelected(selection)
 
+    def GetGraphSize(self):
+        Size = Vec2()
+        Size.X = self.Graph.winfo_width()
+        Size.Y = self.Graph.winfo_height()
+        return Size
+
     def CustomLoop(self):
         
         for node in self.Nodes:
@@ -182,6 +189,14 @@ class View:
                 for i in node.InputPins:
                     i.ClearConnection()
                     i.DrawConnection()
+
+        # Get visible nodes
+        self.VisibleNodes = []
+        for node in self.Nodes:
+            GraphSize = self.GetGraphSize()
+            NodeSize = node.GetNodeSize()
+            if node.Pos.X + NodeSize.X >= 0 and node.Pos.X < GraphSize.X and node.Pos.Y + NodeSize.Y >= 0 and node.Pos.Y < GraphSize.Y:
+                self.VisibleNodes.append(node)
 
         self.Controller.Update()
         self.MainWindow.after(16, self.CustomLoop)

@@ -98,6 +98,17 @@ class GraphNode:
 
         self.MainWidget.destroy()
 
+    def GetNodeSize(self):
+        SizeX = self.ImageSize
+        if self.CanHaveInputs:
+            SizeX = SizeX + self.SideExtend
+        if self.CanHaveOuputs:
+            SizeX = SizeX + self.SideExtend
+
+        SizeY = self.ImageSize
+        SizeY = SizeY + self.LabelExtend
+        return Vec2(SizeX,SizeY)
+
     @staticmethod
     def GetChildren():
         return GraphNode.__subclasses__()
@@ -130,7 +141,7 @@ class Box(GraphNode):
 class Intersect(GraphNode):
     def __init__(self, view, x = 0, y = 0):
 
-        self.Name = 'And'
+        self.Name = 'Intersect'
         self.InputsNum = 2
         self.OutputsNum = 1
         self.CanHaveInputs = True;

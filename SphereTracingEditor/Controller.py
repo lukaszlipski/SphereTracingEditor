@@ -19,7 +19,6 @@ class Controller:
 
     def GraphRightMousePressed(self):
         CurrentMousePos = self.Window.GetMousePos()
-        #self.Window.CreateNode(CurrentMousePos.X, CurrentMousePos.Y)
         self.Window.DeleteNodesMenu()
         self.Window.CreateNodesMenu(CurrentMousePos)
 
