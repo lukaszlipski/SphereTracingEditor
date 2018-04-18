@@ -45,7 +45,13 @@ class GraphPin:
         print('GraphPin::RemoveAllConnections not implemented')
 
     def IsAlreadyConnection(self, otherPin):
-        print('GraphPin::IsAlreadyConnection not implemented');
+        print('GraphPin::IsAlreadyConnection not implemented')
+
+    def IsConnected(self):
+        print('GraphPin::IsConnected not implemented')
+
+    def IsOutputPin(self):
+        print('GraphPin::IsOutputPin not implemented')
 
 class GraphInputPin(GraphPin):
     def __init__(self, owner, index, widget, pos = Vec2()):
@@ -54,6 +60,10 @@ class GraphInputPin(GraphPin):
         # Allow only one connection
         self.Connection = None
 
+    def GetConnectedPin(self):
+        if self.Connection:
+            return self.Connection.GetOther(self)
+        return None
 
     def SetConnection(self, connection):
         if not(isinstance(connection, GraphConnections.BezierConnection)):
@@ -75,7 +85,6 @@ class GraphInputPin(GraphPin):
         if self.Connection:
             self.Connection.Draw()
             
-
     def ClearConnection(self):
         if self.Connection:
             self.Connection.Clear()
@@ -87,6 +96,15 @@ class GraphInputPin(GraphPin):
     def IsAlreadyConnection(self, otherPin):
         return self.Connection.CheckConnection(self, otherPin)
 
+    def IsConnected(self):
+        if self.Connection:
+            return True
+        else:
+            return False
+
+    def IsOutputPin(self):
+        return False
+
 
 class GraphOutputPin(GraphPin):
     def __init__(self, owner, index, widget, pos = Vec2()):
@@ -95,6 +113,13 @@ class GraphOutputPin(GraphPin):
         # Allow multiple connections
         self.Connections = []
 
+    def GetConnectedPins(self):
+        Result = []
+        for connection in self.Connections:
+            Other = connection.GetOther(self)
+            if Other:
+                Result.append(Other)
+        return Result
 
     def SetConnection(self, connection):
         if not(isinstance(connection, GraphConnections.BezierConnection)):
@@ -128,4 +153,10 @@ class GraphOutputPin(GraphPin):
             if connection.CheckConnection(self, otherPin):
                 return True
         return False
+
+    def IsConnected(self):
+        return len(self.Connections) > 0
+
+    def IsOutputPin(self):
+        return True
  

@@ -39,6 +39,12 @@
     <Compile Include="GraphPins.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ModelNodes.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SphereTracingEditor.py" />
     <Compile Include="View.py">
       <SubType>Code</SubType>

@@ -87,3 +87,11 @@ class BezierConnection:
             Result = True
         return Result
 
+    def GetOther(self, pin):
+        if self.Start == pin:
+            return self.End
+        elif self.End == pin:
+            return self.Start
+        else:
+            return None
+

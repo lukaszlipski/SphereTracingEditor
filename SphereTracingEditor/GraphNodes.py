@@ -63,7 +63,7 @@ class GraphNode:
                 self.InputPins.append(GraphPins.GraphInputPin(self, i, self.InputsWidget, Vec2(0,CurrentHeight)))
 
         # Image
-        self.Image = tk.Frame(self.Node, bg='red')
+        self.Image = tk.Frame(self.Node, bg='black')
         self.Image.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.Image.configure(width=self.ImageSize, height=self.ImageSize)
 
@@ -88,6 +88,14 @@ class GraphNode:
 
     def NodePinLeftMouseReleased(self, pin):
         self.Owner.NodePinLeftMouseReleased(self, pin)
+
+    def IsValid(self):
+        if self.CanHaveInputs:
+            for input in self.InputPins:
+                if not input.IsConnected():
+                    return False
+        return True
+
 
     def Delete(self):
         for input in self.InputPins:

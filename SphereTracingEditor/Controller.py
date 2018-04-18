@@ -3,6 +3,7 @@ from CustomMath import Vec2
 import GraphConnections
 import GraphPins
 import GraphNodes
+import ModelNodes
 
 class Controller:
 
@@ -97,6 +98,48 @@ class Controller:
 
             self.NewConnection.Clear()
             self.NewConnection = None
+
+            # create tree for model
+            if oldPin.IsOutputPin():
+                InputNode = NewPin.Owner
+            else:
+                InputNode = oldPin.Owner
+            
+
+            self.VerifyNode(InputNode) 
+                
+
+
+    def VerifyNode(self, node):
+        Root = eval(('ModelNodes.' + node.Name))()
+        Result = self.CreateTree(node, Root)
+        if Result:
+            # TODO: Pass tree to Model
+            if node.CanHaveOuputs:
+                for outputPin in node.OutputPins:
+                    for inputPin in outputPin.GetConnectedPins():
+                        self.VerifyNode(inputPin.Owner)
+        return Result
+
+
+    def CreateTree(self, currentNode, currentTreeNode):
+        if not(currentNode.IsValid()):
+            return False
+
+        Result = True
+
+        if currentNode.CanHaveInputs:
+            for inputPin in currentNode.InputPins:
+                if not inputPin.IsConnected():
+                    return False
+                outputPin = inputPin.GetConnectedPin()
+                Node = eval(('ModelNodes.' + outputPin.Owner.Name))()
+
+                currentTreeNode.AddChild(Node, inputPin.Index, outputPin.Index)
+
+                Result = Result and self.CreateTree(outputPin.Owner, Node)
+
+        return Result
         
 
     def NodesMenuSelected(self, selection):
